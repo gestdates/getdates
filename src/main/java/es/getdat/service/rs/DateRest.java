@@ -1,12 +1,8 @@
 package es.getdat.service.rs;
 
-import static org.quartz.CronScheduleBuilder.cronSchedule;
-import static org.quartz.TriggerBuilder.newTrigger;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -18,11 +14,11 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jboss.logging.Logger;
-import org.quartz.Trigger;
 
 import es.getdat.model.PaginatedListWrapper;
 import es.getdat.util.CronUtils;
 import es.getdat.util.DateUtils;
+import es.getdat.util.QuarzUtils;
 import es.getdat.util.StringUtils;
 
 @Path("/v1/")
@@ -55,13 +51,15 @@ public class DateRest implements Serializable {
 
 		Date dateFrom = DateUtils.getDateFromString(from);
 		Date dateTo = DateUtils.getDateFromString(to);
-		Trigger t = newTrigger()
-				.withIdentity("test", "test")
-				.withSchedule(
-						cronSchedule(cron).inTimeZone(
-								TimeZone.getTimeZone("Europe/Rome")))
-				.startAt(dateFrom).endAt(dateTo).build();
-		List<Date> dates = DateUtils.nextTrigger(max, t);
+		List<Date> dates = QuarzUtils.getDates(cron.toString(), dateFrom,
+				dateTo, max);
+		// Trigger t = newTrigger()
+		// .withIdentity("test", "test")
+		// .withSchedule(
+		// cronSchedule(cron).inTimeZone(
+		// TimeZone.getTimeZone("Europe/Rome")))
+		// .startAt(dateFrom).endAt(dateTo).build();
+		// List<Date> dates = DateUtils.nextTrigger(max, t);
 		logger.info("dates" + dates != null ? dates.size() : "null");
 		return DateUtils.between(dateFrom, dateTo, dates);
 	}
@@ -100,21 +98,24 @@ public class DateRest implements Serializable {
 		logger.info("to:" + to);
 		logger.info("max:" + max);
 
+		StringBuffer cron = CronUtils.getHours(times).append("* * ?");
+		// Trigger t = newTrigger()
+		// .withIdentity("test", "test")
+		// .withSchedule(
+		// cronSchedule(cron.toString()).inTimeZone(
+		// TimeZone.getTimeZone("Europe/Rome")))
+		// .startAt(dateFrom).endAt(dateTo).build();
+		// List<Date> dates = DateUtils.nextTrigger(max, t);
 		Date dateFrom = DateUtils.getDateFromString(from);
 		Date dateTo = DateUtils.getDateFromString(to);
-		StringBuffer cron = CronUtils.getHours(times).append("* * ?");
-		Trigger t = newTrigger()
-				.withIdentity("test", "test")
-				.withSchedule(
-						cronSchedule(cron.toString()).inTimeZone(
-								TimeZone.getTimeZone("Europe/Rome")))
-				.startAt(dateFrom).endAt(dateTo).build();
-		List<Date> dates = DateUtils.nextTrigger(max, t);
+		List<Date> dates = QuarzUtils.getDates(cron.toString(), dateFrom,
+				dateTo, max);
 		logger.info("dates" + dates != null ? dates.size() : "null");
 		return DateUtils.between(dateFrom, dateTo, dates);
 	}
 
 	// - weekly(days, times, from, to, max)
+	// Day of week YES 1-7 or SUN-SAT , - * ? / L #
 	@GET
 	@Path("/weekly")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -133,32 +134,32 @@ public class DateRest implements Serializable {
 		logger.info("to:" + to);
 		logger.info("max:" + max);
 
+		StringBuffer cron = CronUtils.getHours(times).append("? ? ")
+				.append(days).append(" ?");
 		Date dateFrom = DateUtils.getDateFromString(from);
 		Date dateTo = DateUtils.getDateFromString(to);
-		StringBuffer cron = CronUtils.getHours(times).append(
-				CronUtils.getDays(days));
-
-		Trigger t = newTrigger()
-				.withIdentity("test", "test")
-				.withSchedule(
-						cronSchedule(cron.toString()).inTimeZone(
-								TimeZone.getTimeZone("Europe/Rome")))
-				.startAt(dateFrom).endAt(dateTo).build();
-		List<Date> dates = DateUtils.nextTrigger(max, t);
+		List<Date> dates = QuarzUtils.getDates(cron.toString(), dateFrom,
+				dateTo, max);
+		// Trigger t = newTrigger()
+		// .withIdentity("test", "test")
+		// .withSchedule(
+		// cronSchedule(cron.toString()).inTimeZone(
+		// TimeZone.getTimeZone("Europe/Rome")))
+		// .startAt(dateFrom).endAt(dateTo).build();
+		// List<Date> dates = DateUtils.nextTrigger(max, t);
 		logger.info("dates" + dates != null ? dates.size() : "null");
 		return DateUtils.between(dateFrom, dateTo, dates);
 	}
 
-	// - montly(days[], from, to, max)
+	// - montly(days, from, to, max)
 	@GET
 	@Path("/montly")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public PaginatedListWrapper<String> montly(
-			@QueryParam("days") List<String> days,
+	public PaginatedListWrapper<String> montly(@QueryParam("days") String days,
 			@QueryParam("from") String from, @QueryParam("to") String to,
 			@QueryParam("max") int max) throws Exception {
-		if (days == null || days.size() == 0 || StringUtils.isNullOrEmpty(from)
+		if (StringUtils.isNullOrEmpty(days) || StringUtils.isNullOrEmpty(from)
 				|| StringUtils.isNullOrEmpty(to) || max == 0) {
 			throw new Exception("parametri non validi");
 		}
@@ -167,19 +168,20 @@ public class DateRest implements Serializable {
 		logger.info("to:" + to);
 		logger.info("max:" + max);
 
+		StringBuffer cron = new StringBuffer("0 0 0 ").append(days).append(
+				" ? *");
 		Date dateFrom = DateUtils.getDateFromString(from);
 		Date dateTo = DateUtils.getDateFromString(to);
-		StringBuffer cron = new StringBuffer();
-		for (String day : days) {
+		List<Date> dates = QuarzUtils.getDates(cron.toString(), dateFrom,
+				dateTo, max);
 
-		}
-		Trigger t = newTrigger()
-				.withIdentity("test", "test")
-				.withSchedule(
-						cronSchedule(cron.toString()).inTimeZone(
-								TimeZone.getTimeZone("Europe/Rome")))
-				.startAt(dateFrom).endAt(dateTo).build();
-		List<Date> dates = DateUtils.nextTrigger(max, t);
+		// Trigger t = newTrigger()
+		// .withIdentity("test", "test")
+		// .withSchedule(
+		// cronSchedule(cron.toString()).inTimeZone(
+		// TimeZone.getTimeZone("Europe/Rome")))
+		// .startAt(dateFrom).endAt(dateTo).build();
+		// List<Date> dates = DateUtils.nextTrigger(max, t);
 		logger.info("dates" + dates != null ? dates.size() : "null");
 		return DateUtils.between(dateFrom, dateTo, dates);
 	}
@@ -190,34 +192,36 @@ public class DateRest implements Serializable {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public PaginatedListWrapper<String> annualy(
-			@QueryParam("months") List<String> months,
-			@QueryParam("from") String from, @QueryParam("to") String to,
-			@QueryParam("max") int max) throws Exception {
-		if (months == null || months.size() == 0
+			@QueryParam("months") String months,
+			@QueryParam("days") String days, @QueryParam("from") String from,
+			@QueryParam("to") String to, @QueryParam("max") int max)
+			throws Exception {
+		if (StringUtils.isNullOrEmpty(months)
 				|| StringUtils.isNullOrEmpty(from)
 				|| StringUtils.isNullOrEmpty(to) || max == 0) {
 			throw new Exception("parametri non validi");
 		}
-		logger.info("days:" + months);
+		logger.info("months:" + months);
+		logger.info("days:" + days);
 		logger.info("from:" + from);
 		logger.info("to:" + to);
 		logger.info("max:" + max);
 
+		StringBuffer cron = new StringBuffer("0 0 0 ").append(days)
+				.append(months).append(" ? *");
 		Date dateFrom = DateUtils.getDateFromString(from);
 		Date dateTo = DateUtils.getDateFromString(to);
-		StringBuffer cron = new StringBuffer();
-		for (String month : months) {
+		List<Date> dates = QuarzUtils.getDates(cron.toString(), dateFrom,
+				dateTo, max);
 
-		}
-		Trigger t = newTrigger()
-				.withIdentity("test", "test")
-				.withSchedule(
-						cronSchedule(cron.toString()).inTimeZone(
-								TimeZone.getTimeZone("Europe/Rome")))
-				.startAt(dateFrom).endAt(dateTo).build();
-		List<Date> dates = DateUtils.nextTrigger(max, t);
+		// Trigger t = newTrigger()
+		// .withIdentity("test", "test")
+		// .withSchedule(
+		// cronSchedule(cron.toString()).inTimeZone(
+		// TimeZone.getTimeZone("Europe/Rome")))
+		// .startAt(dateFrom).endAt(dateTo).build();
+		// List<Date> dates = DateUtils.nextTrigger(max, t);
 		logger.info("dates" + dates != null ? dates.size() : "null");
 		return DateUtils.between(dateFrom, dateTo, dates);
 	}
-
 }

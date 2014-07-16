@@ -21,16 +21,7 @@ public class DateUtils {
 	static DateFormat dateFormat = new SimpleDateFormat(
 			"dd/MM/yyyy HH:mm:ss.SSS");
 
-	public static List<Date> nextTrigger(int num, Trigger t) {
-		try {
-			List<Date> times = TriggerUtils.computeFireTimes(
-					(OperableTrigger) t, null, num);
-			return times;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+	
 
 	public static PaginatedListWrapper<String> between(Date from, Date to,
 			List<Date> dates) {
