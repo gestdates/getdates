@@ -135,7 +135,7 @@ public class DateRest implements Serializable {
 		logger.info("max:" + max);
 
 		StringBuffer cron = CronUtils.getHours(times).append("? ? ")
-				.append(days).append(" ?");
+				.append(days).append(" *");
 		Date dateFrom = DateUtils.getDateFromString(from);
 		Date dateTo = DateUtils.getDateFromString(to);
 		List<Date> dates = QuarzUtils.getDates(cron.toString(), dateFrom,

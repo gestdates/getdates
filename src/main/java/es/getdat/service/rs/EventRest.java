@@ -15,7 +15,7 @@ import org.jboss.logging.Logger;
 
 import es.getdat.model.PaginatedListWrapper;
 import es.getdat.model.Parameters;
-import es.getdat.model.enums.ChannelType;
+import es.getdat.model.accounting.enums.ChannelType;
 
 @Path("/v1/")
 @Stateless
