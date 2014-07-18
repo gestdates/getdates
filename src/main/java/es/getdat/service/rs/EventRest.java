@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import org.jboss.logging.Logger;
 
 import es.getdat.model.PaginatedListWrapper;
-import es.getdat.model.Parameters;
+import es.getdat.model.Content;
 import es.getdat.model.accounting.enums.ChannelType;
 
 @Path("/v1/")
@@ -38,8 +38,8 @@ public class EventRest implements Serializable {
 	@Path("/account/{account}/events")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String scheduleEvent(String account, ChannelType channelType,
-			Parameters parameters, String date) {
+	public String scheduleEvent(String accountId, ChannelType channelType,
+			Content parameters, String date) {
 
 		return "";
 	}
