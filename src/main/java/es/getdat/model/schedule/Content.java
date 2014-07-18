@@ -1,4 +1,4 @@
-package es.getdat.model;
+package es.getdat.model.schedule;
 
 import java.io.Serializable;
 import java.util.Map;

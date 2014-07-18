@@ -14,8 +14,8 @@ import javax.ws.rs.core.MediaType;
 import org.jboss.logging.Logger;
 
 import es.getdat.model.PaginatedListWrapper;
-import es.getdat.model.Content;
 import es.getdat.model.accounting.enums.ChannelType;
+import es.getdat.model.schedule.Content;
 
 @Path("/v1/")
 @Stateless
