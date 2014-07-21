@@ -134,8 +134,8 @@ public class DateRest implements Serializable {
 		logger.info("to:" + to);
 		logger.info("max:" + max);
 
-		StringBuffer cron = CronUtils.getHours(times).append("? ? ")
-				.append(days).append(" *");
+		StringBuffer cron = CronUtils.getHours(times).append("0 0 0 ? * ")
+				.append(days);
 		Date dateFrom = DateUtils.getDateFromString(from);
 		Date dateTo = DateUtils.getDateFromString(to);
 		List<Date> dates = QuarzUtils.getDates(cron.toString(), dateFrom,
@@ -169,7 +169,7 @@ public class DateRest implements Serializable {
 		logger.info("max:" + max);
 
 		StringBuffer cron = new StringBuffer("0 0 0 ").append(days).append(
-				" ? *");
+				" * ?");
 		Date dateFrom = DateUtils.getDateFromString(from);
 		Date dateTo = DateUtils.getDateFromString(to);
 		List<Date> dates = QuarzUtils.getDates(cron.toString(), dateFrom,
@@ -208,7 +208,7 @@ public class DateRest implements Serializable {
 		logger.info("max:" + max);
 
 		StringBuffer cron = new StringBuffer("0 0 0 ").append(days)
-				.append(months).append(" ? *");
+				.append(months).append(" ? ");
 		Date dateFrom = DateUtils.getDateFromString(from);
 		Date dateTo = DateUtils.getDateFromString(to);
 		List<Date> dates = QuarzUtils.getDates(cron.toString(), dateFrom,
