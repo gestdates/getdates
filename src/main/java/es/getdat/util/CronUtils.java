@@ -1,18 +1,15 @@
 package es.getdat.util;
 
-import static org.quartz.CronScheduleBuilder.cronSchedule;
-import static org.quartz.TriggerBuilder.newTrigger;
-
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
-
 import org.jboss.logging.Logger;
-import org.quartz.Trigger;
 
 public class CronUtils {
 
 	static Logger logger = Logger.getLogger(CronUtils.class);
+
+	static String ss_mm_hh = "0 0 0 ";
+	static String A = "* ";
+	static String Q = "? ";
+	static String S = "  ";
 
 	public static StringBuffer getDays(String days) {
 		StringBuffer cron = new StringBuffer();
@@ -20,7 +17,7 @@ public class CronUtils {
 		return cron;
 	}
 
-	public static StringBuffer getHours(String times) {
+	public static String getHours(String times) {
 		StringBuffer cron = new StringBuffer();
 		String[] blocks = times.split(":");
 		int toAdd = 0;
@@ -45,23 +42,41 @@ public class CronUtils {
 			logger.info("error: too many blocks [" + times + "]");
 			break;
 		}
-		for (String block : blocks) {
-			cron.append(block).append(" ");
-			if (block.contains("-")) {
-				logger.info("range [" + block + "]");
+		for (int i = blocks.length - 1; i >= 0; i--) {
+			cron.append(blocks[i]).append(" ");
+			if (blocks[i].contains("-")) {
+				logger.info("range [" + blocks[i] + "]");
 			}
-			if (block.contains("/")) {
-				logger.info("increment [" + block + "]");
+			if (blocks[i].contains("/")) {
+				logger.info("increment [" + blocks[i] + "]");
 			}
-			if (block.contains(",")) {
-				logger.info("additional values [" + block + "]");
+			if (blocks[i].contains(",")) {
+				logger.info("additional values [" + blocks[i] + "]");
 			}
 		}
+
 		for (int i = 0; i < toAdd; i++) {
-			cron.append("*").append(" ");
+			cron.append(A);
 		}
-		return cron;
+		return cron.toString();
 	}
 
-	
+	public static String annually(String days, String months) {
+		return new StringBuffer(ss_mm_hh).append(days).append(S).append(months)
+				.append(S).append(Q).toString();
+	}
+
+	public static String monthly(String days) {
+		return new StringBuffer(ss_mm_hh).append(days).append(S).append(A)
+				.append(Q).toString();
+	}
+
+	public static String weekly(String times, String days) {
+		return new StringBuffer(times).append(S).append(Q).append(S).append(A)
+				.append(days).toString();
+	}
+
+	public static String daily(String times) {
+		return new StringBuffer(times).append(A).append(A).append(Q).toString();
+	}
 }

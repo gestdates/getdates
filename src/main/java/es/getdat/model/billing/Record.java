@@ -1,5 +1,10 @@
 package es.getdat.model.billing;
 
-public class Record {
+import java.io.Serializable;
+
+public class Record implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	String accountId;
 }

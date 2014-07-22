@@ -1,7 +1,6 @@
 package es.getdat.util;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,9 +8,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.jboss.logging.Logger;
-import org.quartz.Trigger;
-import org.quartz.TriggerUtils;
-import org.quartz.spi.OperableTrigger;
 
 import es.getdat.model.PaginatedListWrapper;
 
@@ -21,10 +17,8 @@ public class DateUtils {
 	static DateFormat dateFormat = new SimpleDateFormat(
 			"dd/MM/yyyy HH:mm:ss.SSS");
 
-	
-
 	public static PaginatedListWrapper<String> between(Date from, Date to,
-			List<Date> dates) {
+			List<Date> dates) throws Exception {
 		List<String> result = new ArrayList<>();
 		for (Date toControll : dates) {
 			if (toControll.after(from) && toControll.before(to)) {
@@ -39,22 +33,27 @@ public class DateUtils {
 		return paginatedListWrapper;
 	}
 
-	public static Date getDateFromString(String dateString) {
-		try {
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-			Date date = df.parse(dateString);
-			return date;
-		} catch (ParseException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public static Date getDateFromString(String dateString) throws Exception {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		Date date = df.parse(dateString);
+		return date;
 	}
 
-	public static String getStringFromDate(Date data) {
+	public static String getStringFromDate(Date data) throws Exception {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		String date = df.format(data);
+		return date;
+	}
+
+	public static List<String> getStringFromDates(List<Date> dates) {
 		try {
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-			String date = df.format(data);
-			return date;
+			List<String> result = new ArrayList<>();
+			for (Date date : dates) {
+				String data = df.format(date);
+				result.add(data);
+			}
+			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

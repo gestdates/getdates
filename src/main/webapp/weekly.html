@@ -54,10 +54,11 @@
 				<p>
 					<b>ENDPOINT DEFINITION</b><br /> GET:
 					https://we.getdat.es/api/v1/weekly
-				<pre>curl --get --include "https://we.getdat.es/api/v1/daily?times=15%3A30%3A00&from=2014-07-16T00%3A00%3A00&to=2014-07-26T00%3A00%3A00&max=3"</pre>
+				<pre>curl --get --include "https://we.getdat.es/api/v1/weekly?days=1-3&times=15%3A30%3A00&from=2014-07-16T00%3A00%3A00&to=2014-07-26T00%3A00%3A00&max=3"</pre>
 
-				<form action="/api/v1/weekly" method="GET" role="form" target="_blank">
-				<div class="form-group">
+				<form action="/api/v1/weekly" method="GET" role="form"
+					target="_blank">
+					<div class="form-group">
 						<label for="cron">Days</label> <input type="text"
 							class="form-control" id="days" name="days"
 							placeholder="Enter days ">

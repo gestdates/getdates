@@ -13,7 +13,8 @@ import org.quartz.spi.OperableTrigger;
 
 public class QuarzUtils {
 
-	public static List<Date> getDates(String cron, Date from, Date to, int max) {
+	public static List<Date> getDates(String cron, Date from, Date to, int max)
+			throws Exception {
 		Trigger t = newTrigger()
 				.withIdentity("test", "test")
 				.withSchedule(
@@ -24,14 +25,9 @@ public class QuarzUtils {
 		return dates;
 	}
 
-	public static List<Date> nextTrigger(int num, Trigger t) {
-		try {
-			List<Date> times = TriggerUtils.computeFireTimes(
-					(OperableTrigger) t, null, num);
-			return times;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+	public static List<Date> nextTrigger(int num, Trigger t) throws Exception {
+		List<Date> times = TriggerUtils.computeFireTimes((OperableTrigger) t,
+				null, num);
+		return times;
 	}
 }
