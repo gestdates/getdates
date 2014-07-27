@@ -1,0 +1,43 @@
+
+<div class="row marketing">
+	<div class="col-lg-12">
+		<h4>Weekly method</h4>
+		<p>
+			<b>ENDPOINT DEFINITION</b><br /> GET:
+			https://we.getdat.es/api/v1/weekly
+		<pre>curl --get --include "https://we.getdat.es/api/v1/weekly?days=1-3&times=15%3A30%3A00&from=2014-07-16T00%3A00%3A00&to=2014-07-26T00%3A00%3A00&max=3"</pre>
+
+		<form action="/api/v1/weekly" method="GET" role="form" target="_blank">
+			<div class="form-group">
+				<label for="cron">Days</label> <input type="text"
+					class="form-control" id="days" name="days"
+					placeholder="Enter days ">
+			</div>
+			<div class="form-group">
+				<label for="cron">Times</label> <input type="text"
+					class="form-control" id="times" name="times"
+					placeholder="Enter times HH/HH:mm-mm:ss,ss">
+			</div>
+			<div class="form-group">
+				<label for="from">From date</label> <input type="text"
+					class="form-control" id="from" name="from"
+					placeholder="Enter from [YYYY-MM-dd'T'HH:mm:ss]">
+			</div>
+
+			<div class="form-group">
+				<label for="to">To date</label> <input type="text"
+					class="form-control" id="to" name="to"
+					placeholder="Enter to [YYYY-MM-dd'T'HH:mm:ss]">
+			</div>
+
+			<div class="form-group">
+				<label for="max">number of results</label> <input type="text"
+					class="form-control" id="max" name="max"
+					placeholder="Enter number of results ">
+			</div>
+			<button type="submit" class="btn btn-default">get dates!</button>
+
+		</form>
+		</p>
+	</div>
+</div>
