@@ -1,6 +1,6 @@
 <ul class="nav nav-pills pull-right" ng-controller="mainController">
-				<li ng-class="menuClass('')><a href="#">Home</a></li>
-				<li ng-class="menuClass('about')><a href="#about">About</a></li>
-				<li ng-class="menuClass('methods')><a href="#methods">Rest Methods</a></li>
-				<li ng-class="menuClass('contact')><a href="#contact">Contact</a></li>
+				<li ng-class="menuClass('')"><a href="#">Home</a></li>
+				<li ng-class="menuClass('about')"><a href="#about">About</a></li>
+				<li ng-class="menuClass('methods') || menuClass('cron') || menuClass('daily') || menuClass('weekly') || menuClass('monthly') || menuClass('annually') "><a href="#methods">Rest Methods</a></li>
+				<li ng-class="menuClass('contact')"><a href="#contact">Contact</a></li>
 </ul>

@@ -1,5 +1,6 @@
 // create the module and name it scotchApp
-var wegetdatesApp = angular.module('wegetdatesApp', [ 'ngRoute' ]);
+var wegetdatesApp = angular
+		.module('wegetdatesApp', [ 'ngRoute', 'ngResource' ]);
 
 // configure our routes
 wegetdatesApp.config(function($routeProvider) {
@@ -53,24 +54,57 @@ wegetdatesApp.config(function($routeProvider) {
 	});
 });
 
-// create the controller and inject Angular's $scope
-wegetdatesApp.controller('mainController', function($scope) {
-	// create a message to display in our view
-	$scope.message = 'Everyone come and see how good I look!';
+// https://we.getdat.es/api/v1/cron?cron=0%200%2012%20*%20*%20?&from=2014-07-16T00:00:00&to=2014-07-26T00:00:00&max=100"
 
-	$scope.menuClass = function(page) {
-		var current = $location.path().substring(1);
-		return page === current ? "active" : "";
-	};
+wegetdatesApp.factory('cronQuery', function($resource) {
+	return $resource('https://we.getdat.es/api/v1/cron');
 });
+
+wegetdatesApp.controller('mainController', [ '$scope', '$location',
+		function($scope, $location) {
+			// create a message to display in our view
+			$scope.message = 'Everyone come and see how good I look!';
+
+			$scope.menuClass = function(page) {
+				var current = $location.path().substring(1);
+				return page === current ? "active" : "";
+			};
+		} ]);
 
 wegetdatesApp.controller('annuallyController', function($scope) {
 	$scope.message = 'Look! I am an about page.';
 });
 
-wegetdatesApp.controller('cronController', function($scope) {
-	$scope.message = 'Contact us! JK. This is just a demo.';
-});
+wegetdatesApp.controller('cronController', [ '$scope', 'cronQuery',
+		function($scope, cronQuery) {
+
+			$scope.clearForm = function() {
+				$scope.data = {};
+				$scope.result = null;
+				$scope.error = null;
+			};
+
+			$scope.message = 'Contact us! JK. This is just a demo.';
+			$scope.clearForm();
+			// cron=0%200%2012%20*%20*%20?&from=2014-07-16T00:00:00&to=2014-07-26T00:00:00&max=100
+
+			$scope.submitCron = function() {
+				$scope.result = null;
+				$scope.error = null;
+
+				var args = {
+					cron : $scope.data.cron,
+					from : $scope.data.from,
+					to : $scope.data.to,
+					max : $scope.data.max
+				};
+				cronQuery.get(args, function(data) {
+					$scope.result = data;
+				}, function(error) {
+					$scope.error = error;
+				});
+			};
+		} ]);
 
 wegetdatesApp.controller('dailyController', function($scope) {
 	$scope.message = 'Contact us! JK. This is just a demo.';
